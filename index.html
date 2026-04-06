@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestão iFoodApresentação Comercial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&display=swap" rel="stylesheet" />
+  <style>
+/* ─────────────────────────────────────────
+   TOKENS
+───────────────────────────────────────── */
+:root {
+  --black:   #050505;
+  --ink:     #0c0c0c;
+  --card:    #111111;
+  --card2:   #161616;
+  --line:    rgba(255,255,255,0.06);
+  --line-hi: rgba(255,255,255,0.13);
+  --white:   #ffffff;
+  --off:     #f0f0f0;
+  --mid:     #b8b8b8;
+  --dim:     #767676;
+  --ghost:   #333333;
+  --font:    'Inter', sans-serif;
+  --ease:    cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─────────────────────────────────────────
+   RESET
+───────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--black); color: var(--white); font-family: var(--font); -webkit-font-smoothing: antialiased; font-feature-settings: "ss01","cv01","cv02"; }
+button { font-family: var(--font); }
+
+/* ─────────────────────────────────────────
+   BACKGROUND DOT GRID
+───────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255,255,255,0.09), transparent 24%),
+    radial-gradient(circle at 78% 20%, rgba(255,255,255,0.06), transparent 22%),
+    radial-gradient(circle at 50% 78%, rgba(255,255,255,0.04), transparent 28%),
+    radial-gradient(circle, rgba(255,255,255,0.038) 1px, transparent 1px);
+  background-size: auto, auto, auto, 36px 36px;
+  pointer-events: none;
+}
+
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.035), transparent 22%, transparent 78%, rgba(255,255,255,0.02)),
+    radial-gradient(circle at center, rgba(255,255,255,0.028), transparent 62%);
+  mix-blend-mode: screen;
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────
+   DECK
+───────────────────────────────────────── */
+#deck { width: 100%; height: 100vh; position: relative; overflow: hidden; z-index: 1; }
+
+/* ─────────────────────────────────────────
+   SLIDE BASE
+───────────────────────────────────────── */
+.slide {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 72px 100px 100px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.45s var(--ease), transform 0.45s var(--ease);
+  transform: translateY(18px);
+  will-change: opacity, transform;
+}
+.slide.active    { opacity: 1; pointer-events: all; transform: translateY(0); }
+.slide.leave-up  { opacity: 0; transform: translateY(-18px); pointer-events: none; }
+.slide.leave-dn  { opacity: 0; transform: translateY(18px);  pointer-events: none; }
+
+/* ─────────────────────────────────────────
+   STAGGERED CHILD ANIMATIONS
+───────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+.slide.active .sc > * { animation: fadeUp 0.5s var(--ease) both; }
+.slide.active .sc > *:nth-child(1) { animation-delay: 0.07s; }
+.slide.active .sc > *:nth-child(2) { animation-delay: 0.14s; }
+.slide.active .sc > *:nth-child(3) { animation-delay: 0.21s; }
+.slide.active .sc > *:nth-child(4) { animation-delay: 0.28s; }
+.slide.active .sc > *:nth-child(5) { animation-delay: 0.35s; }
+.slide.active .sc > *:nth-child(6) { animation-delay: 0.42s; }
+
+.sc { display: flex; flex-direction: column; align-items: center; width: 100%; }
+
+/* ─────────────────────────────────────────
+   TYPOGRAPHY
+───────────────────────────────────────── */
+.eyebrow {
+  font-size: 0.62rem; font-weight: 600;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--dim); margin-bottom: 22px;
+}
+.display {
+  font-size: clamp(2.6rem, 5.5vw, 5rem);
+  font-weight: 900; line-height: 1.0; letter-spacing: -0.04em;
+  text-align: center;
+}
+.title {
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  font-weight: 800; line-height: 1.1; letter-spacing: -0.03em;
+  text-align: center;
+}
+.lead {
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  font-weight: 400; color: var(--mid);
+  line-height: 1.8; text-align: center; max-width: 540px;
+}
+.gt {
+  background: linear-gradient(135deg, #fff 30%, #666 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.ul { text-decoration: underline; text-underline-offset: 8px; text-decoration-color: rgba(255,255,255,0.2); text-decoration-thickness: 1px; }
+
+/* ─────────────────────────────────────────
+   RULE
+───────────────────────────────────────── */
+.rule { width: 1px; height: 40px; background: linear-gradient(to bottom, transparent, var(--line-hi), transparent); margin: 22px auto; }
+
+/* ─────────────────────────────────────────
+   CARDgradient border via background-clip
+───────────────────────────────────────── */
+.card {
+  background: linear-gradient(rgba(20,20,20,0.92), rgba(20,20,20,0.92)) padding-box,
+              linear-gradient(145deg, var(--line-hi), var(--line)) border-box;
+  border: 1px solid transparent; border-radius: 18px;
+  transition: background 0.25s, transform 0.25s;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.22);
+}
+.card:hover {
+  background: linear-gradient(rgba(24,24,24,0.96), rgba(24,24,24,0.96)) padding-box,
+              linear-gradient(145deg, rgba(255,255,255,0.2), rgba(255,255,255,0.06)) border-box;
+  transform: translateY(-3px);
+}
+
+/* ─────────────────────────────────────────
+   TAG / PILL
+───────────────────────────────────────── */
+.tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid var(--line-hi); border-radius: 99px; padding: 5px 14px;
+  font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--mid); margin-bottom: 28px;
+}
+.tag .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--white); animation: pulse-dot 2s infinite; }
+@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(0.6)} }
+.pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid var(--line-hi); border-radius: 99px; padding: 7px 18px;
+  font-size: 0.72rem; font-weight: 500; color: var(--mid);
+}
+.pill .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--white); animation: pulse-dot 1.6s infinite; }
+
+/* ─────────────────────────────────────────
+   PROGRESS BAR
+───────────────────────────────────────── */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 1px; background: var(--white);
+  box-shadow: 0 0 8px rgba(255,255,255,0.4);
+  transition: width 0.45s var(--ease); z-index: 200;
+}
+
+/* ─────────────────────────────────────────
+   NAV
+───────────────────────────────────────── */
+#nav {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 14px; z-index: 100;
+  background: rgba(5,5,5,0.88); backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--line-hi); border-radius: 99px; padding: 8px 18px;
+}
+.nav-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: transparent; border: 1px solid var(--line);
+  color: var(--dim); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.nav-btn:hover  { color: var(--white); border-color: var(--line-hi); background: var(--card); }
+.nav-btn:disabled { opacity: 0.18; cursor: default; pointer-events: none; }
+#counter { font-size: 0.72rem; font-weight: 500; color: var(--dim); min-width: 40px; text-align: center; font-variant-numeric: tabular-nums; }
+#dots { display: flex; gap: 5px; align-items: center; }
+.dot-nav { width: 4px; height: 4px; border-radius: 99px; background: var(--ghost); transition: width 0.3s var(--ease), background 0.3s; cursor: pointer; }
+.dot-nav.on { width: 18px; background: var(--white); }
+
+/* ─────────────────────────────────────────
+   SLIDE NUMBER WATERMARK
+───────────────────────────────────────── */
+.wm {
+  position: absolute; right: 52px; bottom: 100px;
+  font-size: 7rem; font-weight: 900; color: rgba(255,255,255,0.018);
+  letter-spacing: -0.06em; line-height: 1; pointer-events: none; user-select: none;
+}
+
+/* ═══════════════════════════════════════════
+   SLIDE 1GANCHO
+═══════════════════════════════════════════ */
+#s1 .stat-row { display: flex; align-items: center; gap: 36px; margin-top: 44px; flex-wrap: wrap; justify-content: center; }
+#s1 .stat { text-align: center; }
+#s1 .stat-num {
+  font-size: clamp(1.8rem, 3.5vw, 3.2rem); font-weight: 900; letter-spacing: -0.04em; line-height: 1;
+  background: linear-gradient(135deg, #fff, #777);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+#s1 .stat-label { font-size: 0.7rem; color: var(--dim); font-weight: 500; margin-top: 5px; letter-spacing: 0.04em; }
+#s1 .sep { width: 1px; height: 36px; background: var(--line-hi); }
+
+/* ═══════════════════════════════════════════
+   SLIDE 2A DOR
+═══════════════════════════════════════════ */
+#s2 .pains { display: flex; flex-direction: column; gap: 10px; max-width: 620px; width: 100%; margin: 12px auto 0; }
+#s2 .pain {
+  display: flex; align-items: flex-start; justify-content: center; gap: 14px; padding: 15px 20px; border-radius: 12px;
+  background: rgba(255,255,255,0.025); border: 1px solid var(--line);
+  transition: border-color 0.2s, transform 0.2s;
+}
+#s2 .pain:hover { border-color: var(--line-hi); transform: translateX(4px); }
+#s2 .pain-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; filter: saturate(1.4) brightness(1.15); }
+#s2 .pain > div { text-align: center; max-width: 720px; }
+#s2 .pain-text { font-size: 0.9rem; font-weight: 600; color: var(--off); margin-bottom: 2px; }
+#s2 .pain-sub  { font-size: 0.76rem; color: var(--dim); line-height: 1.5; }
+
+/* ═══════════════════════════════════════════
+   SLIDE 3O CUSTO
+═══════════════════════════════════════════ */
+#s3 .cost-box { display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 8px 0 28px; }
+#s3 .cost-num {
+  font-size: clamp(4rem, 9vw, 8rem); font-weight: 900; line-height: 1; letter-spacing: -0.05em;
+  background: linear-gradient(135deg, #fff 20%, #555 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+#s3 .cost-period { font-size: 0.74rem; color: var(--dim); font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
+#s3 .bullets { display: flex; flex-direction: column; gap: 9px; max-width: 460px; width: 100%; }
+#s3 .bullet { display: flex; align-items: flex-start; gap: 10px; font-size: 0.84rem; color: var(--mid); line-height: 1.5; }
+#s3 .bdot { width: 4px; height: 4px; border-radius: 50%; background: var(--dim); flex-shrink: 0; margin-top: 7px; }
+
+/* ═══════════════════════════════════════════
+   SLIDE 4OS 2 CENÁRIOS
+═══════════════════════════════════════════ */
+#s4 .cols { display: grid; grid-template-columns: 1fr auto 1fr; gap: 18px; align-items: center; max-width: 800px; width: 100%; margin: 12px 0 22px; }
+#s4 .scenario {
+  padding: 30px 26px; border-radius: 16px; text-align: center;
+  background: linear-gradient(var(--card), var(--card)) padding-box,
+              linear-gradient(145deg, var(--line-hi), var(--line)) border-box;
+  border: 1px solid transparent; transition: transform 0.25s;
+}
+#s4 .scenario:hover { transform: translateY(-4px); }
+#s4 .s-icon { font-size: 1.8rem; display: block; filter: saturate(1.3) brightness(1.1); margin-bottom: 10px; }
+#s4 .s-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+#s4 .s-desc  { font-size: 0.77rem; color: var(--mid); line-height: 1.6; }
+#s4 .vs { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+#s4 .vs-word { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.2em; color: var(--dim); text-transform: uppercase; }
+#s4 .vs-line { width: 1px; height: 28px; background: var(--line-hi); }
+#s4 .quote { font-size: clamp(0.85rem, 1.5vw, 1rem); font-weight: 500; color: var(--mid); text-align: center; max-width: 620px; line-height: 1.65; }
+#s4 .quote strong { color: var(--white); }
+
+/* ═══════════════════════════════════════════
+   SLIDE 5A CAUSA RAIZ
+═══════════════════════════════════════════ */
+#s5 .strike-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
+#s5 .sr {
+  display: flex; align-items: center; gap: 10px;
+  font-size: clamp(0.95rem, 1.8vw, 1.2rem); color: rgba(255,255,255,0.72);
+  justify-content: center;
+}
+#s5 .sr s { color: var(--white); font-weight: 500; text-decoration-color: rgba(255,255,255,0.72); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+#s5 .sr svg { flex-shrink: 0; color: rgba(255,255,255,0.72); }
+#s5 .root { font-size: clamp(2rem, 4vw, 3.4rem); font-weight: 900; text-align: center; letter-spacing: -0.03em; line-height: 1.1; }
+
+/* ═══════════════════════════════════════════
+   SLIDE 6O SONHO
+═══════════════════════════════════════════ */
+#s6 .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 780px; width: 100%; margin-top: 14px; }
+#s6 .col-now, #s6 .col-future { border-radius: 16px; padding: 28px 26px; }
+#s6 .col-now { background: rgba(255,255,255,0.015); border: 1px solid var(--line); }
+#s6 .col-future {
+  background: rgba(255,255,255,0.04); border: 1px solid var(--line-hi); position: relative; overflow: hidden;
+}
+#s6 .col-future::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+}
+#s6 .col-label { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); margin-bottom: 18px; }
+#s6 .col-future .col-label { color: var(--mid); }
+#s6 .col-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; font-size: 0.83rem; color: var(--dim); line-height: 1.5; }
+#s6 .col-future .col-item { color: var(--off); }
+#s6 .col-item .ci { flex-shrink: 0; font-size: 0.68rem; margin-top: 3px; }
+
+/* ═══════════════════════════════════════════
+   SLIDE 7O MECANISMO
+═══════════════════════════════════════════ */
+#s7 .pillars { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; max-width: 640px; width: 100%; margin: 14px auto 0; }
+#s7 .pillar {
+  padding: 34px 24px 30px; border-radius: 16px; text-align: center;
+  background: linear-gradient(var(--card), var(--card)) padding-box,
+              linear-gradient(165deg, var(--line-hi), transparent) border-box;
+  border: 1px solid transparent; position: relative; overflow: hidden;
+  transition: transform 0.25s, background 0.25s;
+}
+#s7 .pillar:hover {
+  transform: translateY(-5px);
+  background: linear-gradient(var(--card2), var(--card2)) padding-box,
+              linear-gradient(165deg, rgba(255,255,255,0.22), rgba(255,255,255,0.04)) border-box;
+}
+#s7 .p-num { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ghost); margin-bottom: 18px; }
+#s7 .p-icon { font-size: 2rem; display: block; filter: saturate(1.3) brightness(1.1); margin-bottom: 14px; }
+#s7 .p-name { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+#s7 .p-desc { font-size: 0.78rem; color: var(--mid); line-height: 1.7; }
+
+/* ═══════════════════════════════════════════
+   SLIDE 8DIAGNÓSTICO
+═══════════════════════════════════════════ */
+#s8 .ring {
+  width: 88px; height: 88px; border-radius: 50%;
+  border: 1px solid var(--line-hi);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 28px;
+  animation: breathe 4s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%,100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.05); border-color: var(--line-hi); }
+  50%      { box-shadow: 0 0 0 14px rgba(255,255,255,0); border-color: rgba(255,255,255,0.25); }
+}
+#s8 .ring svg { width: 36px; height: 36px; stroke: var(--white); }
+
+/* ═══════════════════════════════════════════
+   SLIDE 9A SOLUÇÃO
+═══════════════════════════════════════════ */
+#s9 .sol-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; max-width: 1400px; width: 100%; margin: 24px auto 0; }
+#s9 .sol {
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 16px; padding: 32px 24px; border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+}
+#s9 .sol:hover { border-color: rgba(255,255,255,0.18); transform: translateY(-2px); background: linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.03)); box-shadow: 0 8px 32px rgba(255,255,255,0.06); }
+#s9 .sol-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+  border: 1px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; flex-shrink: 0;
+}
+#s9 .sol > div { text-align: center; }
+#s9 .sol h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; color: var(--white); }
+#s9 .sol p  { font-size: 0.82rem; color: var(--mid); line-height: 1.6; }
+
+/* ═══════════════════════════════════════════
+   SLIDE 10PROCESSO
+═══════════════════════════════════════════ */
+#s10 .timeline {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  max-width: 820px; width: 100%; margin-top: 22px; position: relative;
+}
+#s10 .timeline::before {
+  content: ''; position: absolute; top: 21px; left: 12%; right: 12%;
+  height: 1px; background: var(--line-hi); z-index: 0;
+}
+#s10 .step { text-align: center; padding: 0 10px; position: relative; z-index: 1; }
+#s10 .step-dot {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--card); border: 1px solid var(--line-hi);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px; font-size: 1rem; filter: saturate(1.3) brightness(1.1);
+  transition: border-color 0.25s, background 0.25s;
+}
+#s10 .step:hover .step-dot { border-color: var(--white); background: var(--card2); }
+#s10 .step-name { font-size: 0.86rem; font-weight: 600; margin-bottom: 4px; }
+#s10 .step-days { font-size: 0.66rem; color: var(--dim); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+#s10 .step-desc { font-size: 0.73rem; color: var(--dim); line-height: 1.55; }
+
+/* ═══════════════════════════════════════════
+   SLIDE 11RESULTADOS
+═══════════════════════════════════════════ */
+#s11 .metrics { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; max-width: 800px; width: 100%; margin-top: 12px; }
+#s11 .metric {
+  padding: 42px 24px; border-radius: 18px; text-align: center;
+  background: linear-gradient(var(--card), var(--card)) padding-box,
+              linear-gradient(145deg, var(--line-hi), var(--line)) border-box;
+  border: 1px solid transparent; position: relative; overflow: hidden;
+  transition: transform 0.25s, background 0.25s;
+}
+#s11 .metric::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+}
+#s11 .metric:hover {
+  transform: scale(1.04);
+  background: linear-gradient(var(--card2), var(--card2)) padding-box,
+              linear-gradient(145deg, rgba(255,255,255,0.2), rgba(255,255,255,0.04)) border-box;
+}
+#s11 .m-num {
+  font-size: clamp(2.8rem, 5.5vw, 4.2rem); font-weight: 900; line-height: 1; letter-spacing: -0.05em; margin-bottom: 8px;
+  background: linear-gradient(135deg, #fff, #999);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+#s11 .m-label { font-size: 0.78rem; color: var(--mid); font-weight: 500; }
+#s11 .note { font-size: 0.67rem; color: var(--ghost); margin-top: 22px; }
+
+/* ═══════════════════════════════════════════
+   SLIDE 12STACK DE VALOR
+═══════════════════════════════════════════ */
+#s12 .stack { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; max-width: 720px; width: 100%; margin-top: 10px; }
+#s12 .item {
+  display: flex; align-items: flex-start; gap: 12px; padding: 16px 18px; border-radius: 12px;
+  background: rgba(255,255,255,0.02); border: 1px solid var(--line);
+  transition: border-color 0.2s;
+}
+#s12 .item:hover { border-color: var(--line-hi); }
+#s12 .ck {
+  width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--line-hi);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;
+}
+#s12 .ck svg { width: 10px; height: 10px; stroke: var(--white); stroke-width: 2.5; }
+#s12 .i-title { font-size: 0.84rem; font-weight: 600; margin-bottom: 1px; }
+#s12 .i-desc  { font-size: 0.74rem; color: var(--mid); line-height: 1.5; }
+
+/* ═══════════════════════════════════════════
+   SLIDE 13ANCORAGEM
+═══════════════════════════════════════════ */
+#s13 .anchor { display: flex; flex-direction: column; gap: 8px; max-width: 500px; width: 100%; margin-top: 10px; }
+#s13 .a-row {
+  display: flex; align-items: center; justify-content: space-between; padding: 14px 22px; border-radius: 12px;
+  background: rgba(255,255,255,0.02); border: 1px solid var(--line);
+}
+#s13 .a-name { font-size: 0.86rem; color: var(--mid); }
+#s13 .a-val  { font-size: 0.9rem; font-weight: 600; color: var(--dim); text-decoration: line-through; }
+#s13 .a-total {
+  display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; border-radius: 12px;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--line-hi); margin-top: 4px;
+}
+#s13 .a-total .a-name { font-size: 0.92rem; font-weight: 600; color: var(--off); }
+#s13 .a-total .a-val  { font-size: 1.2rem; font-weight: 800; color: var(--white); text-decoration: none; }
+#s13 .a-note { font-size: 0.8rem; color: var(--dim); text-align: center; margin-top: 20px; font-style: italic; }
+
+/* ═══════════════════════════════════════════
+   SLIDE 15 INVESTIMENTO
+═══════════════════════════════════════════ */
+#s15 .offer {
+  padding: 56px 64px; max-width: 580px; width: 100%; text-align: center;
+  border-radius: 20px; position: relative; overflow: hidden;
+  background: linear-gradient(var(--card), var(--card)) padding-box,
+              linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0.04)) border-box;
+  border: 1px solid transparent;
+}
+#s15 .offer::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+}
+#s15 .o-label { font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--dim); margin-bottom: 28px; }
+#s15 .o-price {
+  font-size: clamp(3.5rem, 8vw, 6.5rem); font-weight: 900; line-height: 1; letter-spacing: -0.05em; margin-bottom: 16px;
+  background: linear-gradient(135deg, #fff 40%, #888 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  white-space: nowrap;
+}
+#s15 .o-period { font-size: 0.82rem; color: var(--dim); margin-bottom: 32px; }
+#s15 .o-sub { font-size: 0.82rem; color: var(--mid); line-height: 1.75; }
+
+/* ═══════════════════════════════════════════
+   SLIDE 15GARANTIA
+═══════════════════════════════════════════ */
+#s15 .g-badge {
+  width: 90px; height: 90px; border-radius: 50%; border: 1px solid var(--line-hi);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 24px; font-size: 2rem; position: relative;
+}
+#s15 .g-badge::before { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 1px solid var(--line); }
+#s15 .g-items { display: flex; flex-direction: column; gap: 9px; max-width: 480px; width: 100%; margin-top: 12px; }
+#s15 .g-item {
+  display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 12px;
+  background: rgba(255,255,255,0.02); border: 1px solid var(--line);
+  font-size: 0.87rem; font-weight: 500; transition: border-color 0.2s;
+}
+#s15 .g-item:hover { border-color: var(--line-hi); }
+#s15 .g-item svg { width: 14px; height: 14px; stroke: var(--mid); flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════
+   SLIDE 16URGÊNCIA
+═══════════════════════════════════════════ */
+#s16 .urgent {
+  padding: 48px 64px; max-width: 560px; width: 100%; text-align: center;
+  border-radius: 22px; position: relative; overflow: hidden;
+  background: linear-gradient(var(--card), var(--card)) padding-box,
+              linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05)) border-box;
+  border: 1px solid transparent;
+}
+#s16 .urgent::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+}
+#s16 .u-label { font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--dim); margin-bottom: 20px; }
+#s16 .u-price {
+  font-size: clamp(3.5rem, 8vw, 6rem); font-weight: 900; line-height: 1; letter-spacing: -0.05em; margin-bottom: 10px;
+  background: linear-gradient(135deg, #fff 40%, #888 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+#s16 .u-sub { font-size: 0.87rem; color: var(--mid); line-height: 1.7; margin-bottom: 22px; }
+#s16 .u-scarcity {
+  display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line-hi);
+  border-radius: 99px; padding: 7px 18px; font-size: 0.72rem; font-weight: 500; color: var(--off);
+}
+#s16 .u-scarcity .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--white); animation: pulse-dot 1.4s infinite; }
+
+/* ═══════════════════════════════════════════
+   SLIDE 17FECHAMENTO
+═══════════════════════════════════════════ */
+#s17 .final-q {
+  font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 900; text-align: center;
+  letter-spacing: -0.04em; line-height: 1.1; max-width: 720px; margin-bottom: 8px;
+}
+#s17 .ctas { display: flex; gap: 12px; margin-top: 40px; flex-wrap: wrap; justify-content: center; }
+#s17 .btn-p {
+  background: var(--white); color: var(--black); border: none; border-radius: 12px;
+  padding: 14px 34px; font-size: 0.9rem; font-weight: 700; cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 0 40px rgba(255,255,255,0.08);
+}
+#s17 .btn-p:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 40px rgba(255,255,255,0.14); }
+#s17 .btn-s {
+  background: transparent; color: var(--mid); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 34px; font-size: 0.9rem; font-weight: 500; cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+#s17 .btn-s:hover { color: var(--white); border-color: var(--line-hi); }
+#s17 .fn { margin-top: 42px; font-size: 0.82rem; color: var(--dim); line-height: 1.6; max-width: 660px; font-weight: 500; }
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width: 960px) {
+  .slide { padding: 44px 40px 96px; }
+  #s7 .pillars { grid-template-columns: 1fr; max-width: 380px; }
+  #s11 .metrics { grid-template-columns: 1fr 1fr; }
+  #s12 .stack { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .slide { padding: 24px 20px 90px; }
+  #s4 .cols { grid-template-columns: 1fr; gap: 12px; }
+  #s4 .vs { flex-direction: row; }
+  #s4 .vs-line { width: 28px; height: 1px; }
+  #s6 .compare { grid-template-columns: 1fr; }
+  #s10 .timeline { grid-template-columns: 1fr 1fr; }
+  #s10 .timeline::before { display: none; }
+  #s11 .metrics { grid-template-columns: 1fr; max-width: 280px; }
+  #s14 .offer, #s16 .urgent { padding: 36px 28px; }
+  #nav { bottom: 18px; padding: 7px 14px; gap: 10px; }
+}
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<div id="deck">
+
+  <!-- ═══════════════════════════════════════
+       S1GANCHO
+  ═══════════════════════════════════════ -->
+  <section class="slide active" id="s1">
+    <div class="sc">
+      <div class="tag"><span class="dot"></span>Apresentação Comercial</div>
+      <h1 class="display gt">Seu restaurante pode faturar<br>muito mais no iFood.</h1>
+      <div class="rule" style="margin:10px auto 14px;"></div>
+      <p class="lead" style="margin-top:0;">A maioria dos donos não sabe que está perdendo pedidos<br>todos os dias por problemas simples de resolver.</p>
+    </div>
+    <div class="wm">01</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       S2A DOR
+  ═══════════════════════════════════════ -->
+  <section class="slide" id="s2">
+    <div class="sc">
+      <div class="eyebrow">Diagnóstico</div>
+      <h2 class="title" style="margin-bottom:28px;">Reconhece alguma dessas situações?</h2>
+      <div class="pains" style="margin-left:auto;margin-right:auto;">
+        <div class="pain">
+          <span class="pain-icon">😓</span>
+          <div>
+            <div class="pain-text">Vendas estagnadas há meses, sem saber o porquê</div>
+            <div class="pain-sub">Você faz tudo certo na cozinha, mas o app não reflete isso</div>
+          </div>
+        </div>
+        <div class="pain">
+          <span class="pain-icon">📉</span>
+          <div>
+            <div class="pain-text">Seu concorrente aparece antes, mesmo sendo pior</div>
+            <div class="pain-sub">O algoritmo não está a seu favor e você não sabe como mudar isso</div>
+          </div>
+        </div>
+        <div class="pain">
+          <span class="pain-icon">⏳</span>
+          <div>
+            <div class="pain-text">Sem tempo para cuidar do iFood além de abrir o app</div>
+            <div class="pain-sub">A operação consome tudo e a gestão da loja fica sempre para depois</div>
+          </div>
+        </div>
+        <div class="pain">
+          <span class="pain-icon">🤷</span>
+          <div>
+            <div class="pain-text">Não sabe quais métricas acompanhar para crescer</div>
+            <div class="pain-sub">Dados em excesso, sem clareza sobre o que realmente importa</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="wm">02</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       S4OS 2 CENÁRIOS
+  ═══════════════════════════════════════ -->
+  <section class="slide" id="s4">
+    <div class="sc">
+      <div class="eyebrow">Onde está o gargalo</div>
+      <h2 class="title" style="margin-bottom:20px;">Dois problemas, uma solução</h2>
+      <div class="cols">
+        <div class="scenario">
+          <span class="s-icon">🔴</span>
+          <div class="s-title">Tem visita, mas não vende</div>
+          <div class="s-desc">A loja aparece, mas não converte. Fotos ruins, cardápio confuso, preços sem âncora.</div>
+        </div>
+        <div class="vs">
+          <div class="vs-line"></div>
+          <div class="vs-word">ou</div>
+          <div class="vs-line"></div>
+        </div>
+        <div class="scenario">
+          <span class="s-icon">🔵</span>
+          <div class="s-title">Não recebe visitas</div>
+          <div class="s-desc">A loja está escondida. Sem posicionamento,<br>sem SEO de cardápio, sem estratégia.</div>
+        </div>
+      </div>
+      <p class="quote">"Ou você <strong>não aparece</strong>, ou aparece e <strong>não vende</strong><br>nos dois casos, o dinheiro fica na mesa."</p>
+    </div>
+    <div class="wm">04</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       S5A CAUSA RAIZ
+  ═══════════════════════════════════════ -->
+  <section class="slide" id="s5">
+    <div class="sc">
+      <div class="eyebrow">A causa raiz</div>
+      <div class="strike-list">
+        <div class="sr">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+          Não é culpa do <s>preço</s>
+        </div>
+        <div class="sr">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+          Não é falta de <s>produto bom</s>
+        </div>
+        <div class="sr">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+          Não é falta de <s>cliente no app</s>
+        </div>
+      </div>
+      <p class="lead" style="margin-top:20px;">A diferença não está na cozinha está na</p>
+      <div class="root"><span class="ul">estratégia</span>.</div>
+    </div>
+    <div class="wm">05</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       S7O MECANISMO
+  ═══════════════════════════════════════ -->
+  <section class="slide" id="s7">
+    <div class="sc">
+      <div class="eyebrow">O mecanismo</div>
+      <h2 class="title" style="margin-bottom:24px;">Os 2 pilares do crescimento</h2>
+      <div class="pillars">
+        <div class="pillar">
+          <div class="p-num">01</div>
+          <span class="p-icon">👁️</span>
+          <div class="p-name">Visibilidade</div>
+          <div class="p-desc">Posicionamento estratégico, SEO, Engenharia de cardápio... Você aparece na frente</div>
+        </div>
+        <div class="pillar">
+          <div class="p-num">02</div>
+          <span class="p-icon">🎯</span>
+          <div class="p-name">Conversão</div>
+          <div class="p-desc">Fotos, descrição e cardápio otimizado. Cada visita tem muito mais chance de virar pedido.</div>
+        </div>
+      </div>
+    </div>
+    <div class="wm">07</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       S8DIAGNÓSTICO AO VIVO
+  ═══════════════════════════════════════ -->
+  <section class="slide" id="s8">
+    <div class="sc" style="align-items:center;">
+      <div class="ring">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </div>
+      <div class="eyebrow">Momento prático</div>
+      <h2 class="title" style="margin-bottom:8px;">Diagnóstico ao vivo</h2>
+      <div class="rule" style="margin:14px auto;"></div>
+      <p style="font-size:1.1rem;font-weight:600;text-align:center;color:var(--mid);">Agora vamos analisar sua loja no iFood</p>
+</div>
+    <div class="wm">08</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       S12STACK DE VALOR
+  ═══════════════════════════════════════ -->
+  <section class="slide" id="s12">
+    <div class="sc">
+      <div class="eyebrow">Tudo incluso</div>
+      <h2 class="title" style="margin-bottom:20px;">Tudo que está incluso para fazer sua loja crescer</h2>
+      <p style="font-size: 0.95rem; color: var(--mid); margin-bottom: 32px; max-width: 680px; margin-left: auto; margin-right: auto;">Não é só gestão, é uma estrutura completa de crescimento dentro do iFood</p>
+      <div class="stack">
+        <div class="item">
+          <div class="ck"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div><div class="i-title">Diagnóstico completo da operação</div><div class="i-desc">Análise completa da loja com identificação de gargalos e oportunidades de crescimento</div></div>
+        </div>
+        <div class="item">
+          <div class="ck"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div><div class="i-title">Engenharia de cardápio</div><div class="i-desc">Estruturação do cardápio para aumentar ticket médio e facilitar a decisão de compra</div></div>
+        </div>
+        <div class="item">
+          <div class="ck"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div><div class="i-title">Otimização de conversão</div><div class="i-desc">Ajustes estratégicos para transformar visitas em pedidos com maior frequência</div></div>
+        </div>
+        <div class="item">
+          <div class="ck"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div><div class="i-title">Acompanhamento contínuo</div><div class="i-desc">Monitoramento constante com otimizações baseadas em dados reais da operação</div></div>
+        </div>
+        <div class="item">
+          <div class="ck"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div><div class="i-title">Suporte direto dedicado</div><div class="i-desc">Suporte direto para decisões rápidas no dia a dia da operação</div></div>
+        </div>
+        <div class="item">
+          <div class="ck"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div><div class="i-title">Reuniões mensais</div><div class="i-desc">Reuniões estratégicas para alinhamento e evolução contínua da operação</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="wm">12</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       S10PROCESSO
+  ═══════════════════════════════════════ -->
+  <section class="slide" id="s10">
+    <div class="sc">
+      <div class="eyebrow">O processo</div>
+      <h2 class="title" style="margin-bottom:40px;">Como funciona na prática</h2>
+      <div style="max-width: 900px; margin: 0 auto; margin-bottom: 32px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; position: relative;">
+          <!-- Linha conectora SVG -->
+          <svg style="position: absolute; top: 45px; left: 0; right: 0; height: 2px; z-index: 0;" viewBox="0 0 900 2" preserveAspectRatio="none">
+            <line x1="0" y1="1" x2="900" y2="1" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="6,6"/>
+          </svg>
+
+          <div style="position: relative; z-index: 1;">
+            <div style="display: flex; justify-content: center; margin-bottom: 16px;">
+              <div style="width: 60px; height: 60px; border-radius: 50%; background: transparent; border: 1.5px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: #4A90E2;">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </div>
+            </div>
+            <h4 style="font-size: 0.95rem; color: var(--white); font-weight: 600; text-align: center; margin: 0 0 8px 0;">Diagnóstico</h4>
+            <p style="font-size: 0.75rem; color: var(--mid); text-align: center; line-height: 1.4; margin: 0;">Análise completa da loja, métricas e oportunidades</p>
+          </div>
+
+          <div style="position: relative; z-index: 1;">
+            <div style="display: flex; justify-content: center; margin-bottom: 16px;">
+              <div style="width: 60px; height: 60px; border-radius: 50%; background: transparent; border: 1.5px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: #50C878;">
+                  <path d="M14.4 14.4 9.6 9.6M12.5 3 L6 9.5M18 6L21 3M3 21L6 18M21 21L18 18"></path>
+                </svg>
+              </div>
+            </div>
+            <h4 style="font-size: 0.95rem; color: var(--white); font-weight: 600; text-align: center; margin: 0 0 8px 0;">Implementação</h4>
+            <p style="font-size: 0.75rem; color: var(--mid); text-align: center; line-height: 1.4; margin: 0;">Ajustes estratégicos no cardápio e estrutura</p>
+          </div>
+
+          <div style="position: relative; z-index: 1;">
+            <div style="display: flex; justify-content: center; margin-bottom: 16px;">
+              <div style="width: 60px; height: 60px; border-radius: 50%; background: transparent; border: 1.5px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: #FF9F43;">
+                  <circle cx="12" cy="12" r="1"></circle>
+                  <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"></path>
+                </svg>
+              </div>
+            </div>
+            <h4 style="font-size: 0.95rem; color: var(--white); font-weight: 600; text-align: center; margin: 0 0 8px 0;">Otimização</h4>
+            <p style="font-size: 0.75rem; color: var(--mid); text-align: center; line-height: 1.4; margin: 0;">Melhorias contínuas com base nos dados reais</p>
+          </div>
+
+          <div style="position: relative; z-index: 1;">
+            <div style="display: flex; justify-content: center; margin-bottom: 16px;">
+              <div style="width: 60px; height: 60px; border-radius: 50%; background: transparent; border: 1.5px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: #E94B8A;">
+                  <polyline points="12 3 20 7.5 20 16.5 12 21 4 16.5 4 7.5 12 3"></polyline>
+                  <polyline points="12 12 20 7.5"></polyline>
+                  <polyline points="12 21 12 12"></polyline>
+                  <polyline points="4 7.5 12 12"></polyline>
+                </svg>
+              </div>
+            </div>
+            <h4 style="font-size: 0.95rem; color: var(--white); font-weight: 600; text-align: center; margin: 0 0 8px 0;">Acompanhamento</h4>
+            <p style="font-size: 0.75rem; color: var(--mid); text-align: center; line-height: 1.4; margin: 0;">Monitoramento constante com otimizações frequentes</p>
+          </div>
+        </div>
+      </div>
+      <div style="text-align: center; margin-top: 24px;">
+        <p style="font-size: 0.95rem; color: var(--mid); line-height: 1.7; margin: 0;"><strong style="color: var(--white);">Cada operação tem um ritmo diferente</strong>, por isso o trabalho é adaptado à realidade de cada loja.</p>
+      </div>
+    </div>
+    <div class="wm">10</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       S11RESULTADOS
+  ═══════════════════════════════════════ -->
+  <section class="slide" id="s11">
+    <div class="sc">
+      <div class="eyebrow">Prova social</div>
+      <h2 class="title" style="margin-bottom:40px;">Resultados reais de clientes</h2>
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+          <!-- Slot 1 -->
+          <div style="aspect-ratio: 16/9; border-radius: 12px; background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
+            <div style="text-align: center; z-index: 1;">
+              <div style="font-size: 1.8rem; margin-bottom: 8px;">🖼️</div>
+              <div style="font-size: 0.75rem; color: var(--mid);">Foto/Vídeo 1</div>
+            </div>
+          </div>
+          <!-- Slot 2 -->
+          <div style="aspect-ratio: 16/9; border-radius: 12px; background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
+            <div style="text-align: center; z-index: 1;">
+              <div style="font-size: 1.8rem; margin-bottom: 8px;">🎬</div>
+              <div style="font-size: 0.75rem; color: var(--mid);">Foto/Vídeo 2</div>
+            </div>
+          </div>
+          <!-- Slot 3 -->
+          <div style="aspect-ratio: 16/9; border-radius: 12px; background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
+            <div style="text-align: center; z-index: 1;">
+              <div style="font-size: 1.8rem; margin-bottom: 8px;">🖼️</div>
+              <div style="font-size: 0.75rem; color: var(--mid);">Foto/Vídeo 3</div>
+            </div>
+          </div>
+        </div>
+        <!-- Navegação -->
+        <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
+          <button style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <div style="display: flex; gap: 8px;">
+            <div style="width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3);"></div>
+            <div style="width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.6);"></div>
+            <div style="width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3);"></div>
+          </div>
+          <button style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+        <div style="text-align: center; margin-top: 16px; font-size: 0.8rem; color: var(--dim);">Substitua os placeholders por suas fotos e vídeos de clientes</div>
+      </div>
+    </div>
+    <div class="wm">11</div>
+  </section>
+
+<!-- ═══════════════════════════════════════
+       S13MARCAS CLIENTES
+  ═══════════════════════════════════════ -->
+  <section class="slide" id="s13">
+    <div class="sc">
+      <h2 class="title" style="margin-bottom:48px;">Marcas que fazem parte da nossa história</h2>
+      <div style="max-width: 1200px; margin: 0 auto;">
+        <img src="assets/logos-clientes.png" alt="Logos dos clientes" style="width: 100%; max-width: 700px; height: auto; display: block; margin: 0 auto;">
+      </div>
+    </div>
+    <div class="wm">13</div>
+  </section>
+
+<!-- ═══════════════════════════════════════
+       S14OFERTA PRINCIPAL
+  ═══════════════════════════════════════ -->
+  <!-- ═══════════════════════════════════════
+       S14OFERTA PRINCIPAL
+  ═══════════════════════════════════════ -->
+  <!-- ═══════════════════════════════════════
+       S14 AUTORIDADE
+  ═══════════════════════════════════════ -->
+  <section class="slide" id="s14">
+    <div class="sc" style="align-items:center;">
+      <h2 class="title" style="margin-bottom:48px;">Quem somos e por que confiar</h2>
+      <div style="max-width: 850px; margin: 0 auto; width: 100%;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+          <div style="padding: 28px; border-radius: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; gap: 12px; align-items: center; text-align: center;">
+            <div style="font-size: 2rem; color: var(--white); font-weight: 800;">4+</div>
+            <div style="font-weight: 700; color: var(--white); font-size: 0.95rem;">Anos no mercado</div>
+            <div style="font-size: 0.8rem; color: var(--mid); line-height: 1.6;">Empresa consolidada com experiência comprovada no segmento foodservice.</div>
+          </div>
+          <div style="padding: 28px; border-radius: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; gap: 12px; align-items: center; text-align: center;">
+            <div style="font-size: 2rem; color: var(--white); font-weight: 800;">1K+</div>
+            <div style="font-weight: 700; color: var(--white); font-size: 0.95rem;">Lojas no iFood</div>
+            <div style="font-size: 0.8rem; color: var(--mid); line-height: 1.6;">Ajudamos no crescimento de mais de 1 mil restaurantes na plataforma.</div>
+          </div>
+          <div style="padding: 28px; border-radius: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; gap: 12px; align-items: center; text-align: center;">
+            <div style="font-size: 2rem; color: var(--white); font-weight: 800;">100%</div>
+            <div style="font-weight: 700; color: var(--white); font-size: 0.95rem;">Focado em foodservice</div>
+            <div style="font-size: 0.8rem; color: var(--mid); line-height: 1.6;">Agência especializada unicamente no segmento foodservice.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="wm">14</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       S15 INVESTIMENTO PRINCIPAL
+  ═══════════════════════════════════════ -->
+  <section class="slide" id="s15">
+    <div class="sc" style="align-items:center;">
+      <div class="eyebrow">Investimento</div>
+      <div class="offer">
+        <div class="o-label">Gestão Completa iFood</div>
+        <div class="o-price"><span style="font-size: 0.6em; vertical-align: middle;">R$</span> 5.000,00</div>
+        <div class="o-period">para 3 meses de gestão completa</div>
+        <div style="margin-top: 28px; font-size: 0.9rem; color: var(--mid); font-weight: 500;">
+          <strong style="color: var(--white);">ou</strong><br>
+          <span style="font-size: 1.8rem; font-weight: 800; color: var(--white); display: block; margin-top: 12px;">R$ 2.000,00 <span style="font-size: 0.6em;">/ mês</span></span>
+          <span style="font-size: 0.8rem; margin-top: 8px; display: block;">(forma facilitada de entrada)</span>
+        </div>
+        <div class="o-sub" style="margin-top: 32px;">
+          Você recebe toda a estratégia, execução e acompanhamento por um valor muito abaixo do que custaria montar isso internamente.
+        </div>
+      </div>
+    </div>
+    <div class="wm">15</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       S16 GARANTIA
+  ═══════════════════════════════════════ -->
+  <section class="slide" id="s16">
+    <div class="sc" style="align-items:center;">
+      <div style="max-width: 720px; margin-top: 48px;">
+        <div style="padding: 64px 48px; border-radius: 20px; background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+          <div style="font-size: 3.5rem; margin-bottom: 32px;">🛡️</div>
+          <h2 class="title" style="margin-bottom: 40px; font-size: clamp(2.2rem, 6vw, 3.2rem);">Garantia</h2>
+          <p style="font-size: 1.05rem; line-height: 1.85; color: var(--white); margin-bottom: 28px; font-weight: 500;">
+            Caso no final dos 3 meses o valor investido não tenha<br>retornado em faturamento, continuamos o serviço<br>
+            <strong>sem qualquer cobrança referente à mão de obra.</strong>
+          </p>
+          <div style="height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); margin: 36px 0;"></div>
+          <p style="font-size: 0.95rem; color: var(--dim); line-height: 1.7;">
+            Sua satisfação e resultado são nossa prioridade.<br>Trabalhamos com confiança e responsabilidade.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="wm">16</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       S17 FECHAMENTO
+  ═══════════════════════════════════════ -->
+  <section class="slide" id="s17">
+    <div class="sc" style="align-items:center;">
+      <div class="final-q gt">Vamos juntos<br>resolver isso agora?</div>
+      <p class="fn">Cada semana sem gestão é receita deixada na mesa.</p>
+    </div>
+    <div class="wm">17</div>
+  </section>
+
+</div><!-- /deck -->
+
+<!-- NAV -->
+<div id="nav">
+  <button class="nav-btn" id="btn-prev" aria-label="Anterior">
+    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <div id="dots"></div>
+  <span id="counter">1 / 17</span>
+  <button class="nav-btn" id="btn-next" aria-label="Próximo">
+    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const btnP   = document.getElementById('btn-prev');
+  const btnN   = document.getElementById('btn-next');
+  const ctr    = document.getElementById('counter');
+  const dotsEl = document.getElementById('dots');
+  const bar    = document.getElementById('progress-bar');
+  const TOTAL  = slides.length;
+
+  let cur  = 0;
+  let busy = false;
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot-nav' + (i === 0 ? ' on' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(d);
+  });
+  const dots = Array.from(dotsEl.querySelectorAll('.dot-nav'));
+
+  function goTo(idx, dir = 'fwd') {
+    if (busy || idx === cur || idx < 0 || idx >= TOTAL) return;
+    busy = true;
+
+    const prev = cur;
+    cur = idx;
+
+    slides[prev].classList.remove('active');
+    slides[prev].classList.add(dir === 'fwd' ? 'leave-up' : 'leave-dn');
+
+    // Reset stagger animations on incoming slide
+    const sc = slides[cur].querySelector('.sc');
+    if (sc) {
+      Array.from(sc.children).forEach(el => {
+        el.style.animation = 'none';
+        void el.offsetWidth;
+        el.style.animation = '';
+      });
+    }
+
+    slides[cur].style.transform = dir === 'fwd' ? 'translateY(18px)' : 'translateY(-18px)';
+    slides[cur].style.opacity   = '0';
+    slides[cur].classList.add('active');
+    void slides[cur].offsetWidth;
+    slides[cur].style.transform = '';
+    slides[cur].style.opacity   = '';
+
+    setTimeout(() => {
+      slides[prev].classList.remove('leave-up', 'leave-dn');
+      busy = false;
+    }, 460);
+
+    sync();
+  }
+
+  function sync() {
+    ctr.textContent = `${cur + 1} / ${TOTAL}`;
+    btnP.disabled   = cur === 0;
+    btnN.disabled   = cur === TOTAL - 1;
+    dots.forEach((d, i) => d.classList.toggle('on', i === cur));
+    bar.style.width = ((cur + 1) / TOTAL * 100) + '%';
+  }
+
+  btnN.addEventListener('click', () => goTo(cur + 1, 'fwd'));
+  btnP.addEventListener('click', () => goTo(cur - 1, 'bwd'));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); goTo(cur + 1, 'fwd'); }
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); goTo(cur - 1, 'bwd'); }
+  });
+
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 48) dx < 0 ? goTo(cur + 1, 'fwd') : goTo(cur - 1, 'bwd');
+  }, { passive: true });
+
+  sync();
+</script>
+</body>
+</html>
